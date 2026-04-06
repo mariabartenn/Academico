@@ -1,16 +1,18 @@
 import os
 from pathlib import Path
 
+# Caminho base do projeto
 BASE_DIR = Path(__file__).resolve().parent.parent
 
+# SEGURANÇA: Mantenha a chave secreta em segredo em produção!
 SECRET_KEY = 'django-insecure-8l8o(-2su$6t%k424293i#x672q0$*^itfyi9r32$8j-igo7zf'
 
+# SEGURANÇA: Não rode com DEBUG ativo em produção!
 DEBUG = True
 
 ALLOWED_HOSTS = []
 
-# ------------------ APPS ------------------
-
+# Definição das Aplicações
 INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
@@ -21,11 +23,9 @@ INSTALLED_APPS = [
     'app',
 ]
 
-# ------------------ MIDDLEWARE ------------------
-
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
-    'django.contrib.sessions.middleware.SessionMiddleware',  # corrigido
+    'django.contrib.sessions.middleware.SessionMiddleware', # Corrigido: SessionMiddleware
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
@@ -34,8 +34,6 @@ MIDDLEWARE = [
 ]
 
 ROOT_URLCONF = 'config.urls'
-
-# ------------------ TEMPLATES ------------------
 
 TEMPLATES = [
     {
@@ -57,12 +55,11 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'config.wsgi.application'
 
-# ------------------ DATABASE (IMPORTANTE) ------------------
-
+# Banco de Dados (PostgreSQL)
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'academico',        # nome do banco no pgAdmin
+        'NAME': 'academicoinfo2026',
         'USER': 'postgres',
         'PASSWORD': '123456',
         'HOST': 'localhost',
@@ -70,8 +67,7 @@ DATABASES = {
     }
 }
 
-# ------------------ PADRÃO DJANGO ------------------
-
+# Validação de Senhas
 AUTH_PASSWORD_VALIDATORS = [
     {
         'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
@@ -87,22 +83,19 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
+# Internacionalização
 LANGUAGE_CODE = 'pt-br'
-
 TIME_ZONE = 'America/Sao_Paulo'
-
 USE_I18N = True
-
 USE_TZ = True
 
-# ------------------ STATIC (ESSENCIAL) ------------------
-
+# Arquivos Estáticos (CSS, JavaScript, Imagens)
 STATIC_URL = 'static/'
+STATIC_ROOT = os.path.join(BASE_DIR, "staticfiles") 
 
 STATICFILES_DIRS = [
-    os.path.join(BASE_DIR, 'app/static'),
+    os.path.join(BASE_DIR, "app/static"),
 ]
 
-# ------------------ DEFAULT ------------------
-
+# Tipo de campo de chave primária padrão
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
