@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cursos Disponíveis</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body { background: #0f172a; color: white; }
+        .course-item {
+            background: #1e293b;
+            border-radius: 15px;
+            padding: 25px;
+            border-top: 4px solid #38bdf8;
+            transition: all 0.3s ease;
+        }
+        .course-item:hover { border-top-color: #818cf8; transform: translateY(-10px); }
+        .text-area { color: #94a3b8; font-size: 0.9rem; text-transform: uppercase; letter-spacing: 1px; }
+    </style>
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark sticky-top">
+        <div class="container">
+            <a class="navbar-brand fw-bold" href="/">ACADÊMICO</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <div class="navbar-nav ms-auto">
+                    <a class="nav-link" href="/">Home</a>
+                    <a class="nav-link" href="/pessoas/">Pessoas</a>
+                    <a class="nav-link" href="/cursos/">Cursos</a>
+                    <a class="nav-link" href="/disciplinas/">Disciplinas</a>
+                    <a class="nav-link" href="/matriculas/">Matrículas</a>
+                    <a class="nav-link" href="/avaliacoes/">Avaliações</a>
+                    <a class="nav-link" href="/ocorrencias/">Ocorrências</a>
+                    <a class="nav-link text-warning" href="/admin/">Admin</a>
+                </div>
+            </div>
+        </div>
+    </nav>
+    <div class="container py-5">
+        <h2 class="fw-bold mb-5 text-center">Nossos Cursos</h2>
+        <div class="row g-4">
+            {% for c in cursos %}
+            <div class="col-md-6 col-lg-4">
+                <div class="course-item h-100 shadow-lg">
+                    <div class="text-area mb-2">{{ c.area_saber.nome }}</div>
+                    <h4 class="fw-bold mb-3">{{ c.nome }}</h4>
+                    <div class="d-flex justify-content-between text-secondary small mb-3">
+                        <span><i class="bi bi-clock"></i> {{ c.carga_horaria_total }} Horas</span>
+                        <span>{{ c.duracao_meses }} Meses</span>
+                    </div>
+                    <p class="small text-secondary mb-0 border-top pt-3">
+                        Instituição: <span class="text-info">{{ c.instituicao.nome }}</span>
+                    </p>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        <div class="text-center mt-5">
+            <a href="/" class="btn btn-link text-secondary">Voltar ao Início</a>
+        </div>
+    </div>
+</body>
+</html>

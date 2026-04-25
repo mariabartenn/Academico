@@ -1,163 +1,134 @@
 from django.db import models
 
-
-# RF12 - Cidade
 class Cidade(models.Model):
-    nome = models.CharField(max_length=100)
-    uf = models.CharField(max_length=2)
+    nome = models.CharField(max_length=100, verbose_name="Nome da Cidade")
+    uf = models.CharField(max_length=2, verbose_name="UF")
 
     def __str__(self):
-        return f"{self.nome} - {self.uf}"
+        return f"{self.nome} ({self.uf})"
 
+    class Meta:
+        verbose_name = "Cidade"
+        verbose_name_plural = "Cidades"
 
-# RF02 - Ocupação
 class Ocupacao(models.Model):
-    nome = models.CharField(max_length=100)
+    nome = models.CharField(max_length=100, verbose_name="Ocupação")
 
     def __str__(self):
         return self.nome
+    
+    class Meta:
+        verbose_name = "Ocupação"
+        verbose_name_plural = "Ocupações"
 
-
-# RF01 - Pessoa
 class Pessoa(models.Model):
-    nome = models.CharField(max_length=100)
-    pai = models.CharField(max_length=100)
-    mae = models.CharField(max_length=100)
-    cpf = models.CharField(max_length=11)
-    data_nasc = models.DateField()
-    email = models.EmailField()
-
-    cidade = models.ForeignKey(Cidade, on_delete=models.CASCADE)
-    ocupacao = models.ForeignKey(Ocupacao, on_delete=models.CASCADE)
+    nome = models.CharField(max_length=150, verbose_name="Nome")
+    pai = models.CharField(max_length=150, verbose_name="Nome do Pai", blank=True, null=True)
+    mae = models.CharField(max_length=150, verbose_name="Nome da Mãe")
+    cpf = models.CharField(max_length=14, unique=True, verbose_name="CPF")
+    data_nasc = models.DateField(verbose_name="Data de Nascimento")
+    email = models.EmailField(verbose_name="E-mail")
+    cidade = models.ForeignKey(Cidade, on_delete=models.CASCADE, verbose_name="Cidade")
+    ocupacao = models.ForeignKey(Ocupacao, on_delete=models.CASCADE, verbose_name="Ocupação")
 
     def __str__(self):
         return self.nome
+    
+    class Meta:
+        verbose_name = "Pessoa"
+        verbose_name_plural = "Pessoas"
 
-
-# RF03 - Instituição
 class InstituicaoEnsino(models.Model):
-    nome = models.CharField(max_length=100)
-    site = models.CharField(max_length=100)
-    telefone = models.CharField(max_length=20)
-
-    cidade = models.ForeignKey(Cidade, on_delete=models.CASCADE)
+    nome = models.CharField(max_length=150, verbose_name="Instituição")
+    site = models.URLField(verbose_name="Site")
+    telefone = models.CharField(max_length=20, verbose_name="Telefone")
+    cidade = models.ForeignKey(Cidade, on_delete=models.CASCADE, verbose_name="Cidade")
 
     def __str__(self):
         return self.nome
+    
+    class Meta:
+        verbose_name = "Instituição de Ensino"
+        verbose_name_plural = "Instituições de Ensino"
 
-
-# RF04 - Área do Saber
 class AreaSaber(models.Model):
-    nome = models.CharField(max_length=100)
+    nome = models.CharField(max_length=100, verbose_name="Área do Saber")
 
     def __str__(self):
         return self.nome
+    
+    class Meta:
+        verbose_name = "Área do Saber"
+        verbose_name_plural = "Áreas do Saber"
 
-
-# RF05 - Curso
 class Curso(models.Model):
-    nome = models.CharField(max_length=100)
-    carga_horaria_total = models.IntegerField()
-    duracao_meses = models.IntegerField()
+    nome = models.CharField(max_length=150, verbose_name="Curso")
+    carga_horaria_total = models.IntegerField(verbose_name="Carga Horária Total")
+    duracao_meses = models.IntegerField(verbose_name="Duração (Meses)")
+    area_saber = models.ForeignKey(AreaSaber, on_delete=models.CASCADE, verbose_name="Área")
+    instituicao = models.ForeignKey(InstituicaoEnsino, on_delete=models.CASCADE, verbose_name="Instituição")
 
-    area_saber = models.ForeignKey(AreaSaber, on_delete=models.CASCADE)
-    instituicao = models.ForeignKey(InstituicaoEnsino, on_delete=models.CASCADE)
+    def __str__(self):
+        return self.nome
+    
+    class Meta:
+        verbose_name = "Curso"
+        verbose_name_plural = "Cursos"
+
+class Turno(models.Model): # RF11 
+    nome = models.CharField(max_length=50, verbose_name="Turno")
 
     def __str__(self):
         return self.nome
 
-
-# RF06 - Turma
-class Turma(models.Model):
-    nome = models.CharField(max_length=100)
-
-    def __str__(self):
-        return self.nome
-
-
-# RF07 - Disciplina
-class Disciplina(models.Model):
-    nome = models.CharField(max_length=100)
-
-    area_saber = models.ForeignKey(AreaSaber, on_delete=models.CASCADE)
+class Turma(models.Model): # RF06 
+    nome = models.CharField(max_length=100, verbose_name="Nome da Turma")
+    turno = models.ForeignKey(Turno, on_delete=models.CASCADE, verbose_name="Turno", null=True)
 
     def __str__(self):
         return self.nome
 
-
-# RF15 - Tipo de Avaliação
-class AvaliacaoTipo(models.Model):
-    nome = models.CharField(max_length=100)
-
-    def __str__(self):
-        return self.nome
-
-
-# RF08 - Matrícula
-class Matricula(models.Model):
-    instituicao = models.ForeignKey(InstituicaoEnsino, on_delete=models.CASCADE)
-    curso = models.ForeignKey(Curso, on_delete=models.CASCADE)
-    pessoa = models.ForeignKey(Pessoa, on_delete=models.CASCADE)
-
-    data_inicio = models.DateField()
-    data_previsao_termino = models.DateField()
-
-    def __str__(self):
-        return f"{self.pessoa} - {self.curso}"
-
-
-# RF09 - Avaliação
-class Avaliacao(models.Model):
-    descricao = models.CharField(max_length=200)
-
-    curso = models.ForeignKey(Curso, on_delete=models.CASCADE)
-    disciplina = models.ForeignKey(Disciplina, on_delete=models.CASCADE)
-    tipo = models.ForeignKey(AvaliacaoTipo, on_delete=models.CASCADE)
-
-    def __str__(self):
-        return self.descricao
-
-
-# RF10 - Frequência
-class Frequencia(models.Model):
-    curso = models.ForeignKey(Curso, on_delete=models.CASCADE)
-    disciplina = models.ForeignKey(Disciplina, on_delete=models.CASCADE)
-    pessoa = models.ForeignKey(Pessoa, on_delete=models.CASCADE)
-
-    numero_faltas = models.IntegerField()
-
-    def __str__(self):
-        return f"{self.pessoa} - {self.disciplina}"
-
-
-# RF11 - Turno
-class Turno(models.Model):
-    nome = models.CharField(max_length=50)
+class Disciplina(models.Model): # RF07 
+    nome = models.CharField(max_length=100, verbose_name="Disciplina")
+    area_saber = models.ForeignKey(AreaSaber, on_delete=models.CASCADE, verbose_name="Área")
 
     def __str__(self):
         return self.nome
 
+class CursoDisciplina(models.Model): # RF14 
+    disciplina = models.ForeignKey(Disciplina, on_delete=models.CASCADE, verbose_name="Disciplina")
+    curso = models.ForeignKey(Curso, on_delete=models.CASCADE, verbose_name="Curso")
+    carga_horaria = models.IntegerField(verbose_name="Carga Horária")
+    periodo = models.CharField(max_length=50, verbose_name="Período")
 
-# RF13 - Ocorrência
-class Ocorrencia(models.Model):
-    descricao = models.CharField(max_length=200)
-    data = models.DateField()
+class Matricula(models.Model): # RF08 
+    instituicao = models.ForeignKey(InstituicaoEnsino, on_delete=models.CASCADE, verbose_name="Instituição")
+    curso = models.ForeignKey(Curso, on_delete=models.CASCADE, verbose_name="Curso")
+    pessoa = models.ForeignKey(Pessoa, on_delete=models.CASCADE, verbose_name="Pessoa")
+    data_inicio = models.DateField(verbose_name="Data de Início")
+    data_previsao_termino = models.DateField(verbose_name="Previsão de Término")
 
-    curso = models.ForeignKey(Curso, on_delete=models.CASCADE)
-    disciplina = models.ForeignKey(Disciplina, on_delete=models.CASCADE)
-    pessoa = models.ForeignKey(Pessoa, on_delete=models.CASCADE)
-
-    def __str__(self):
-        return self.descricao
-
-
-# RF14 - CursoDisciplina
-class CursoDisciplina(models.Model):
-    disciplina = models.ForeignKey(Disciplina, on_delete=models.CASCADE)
-    curso = models.ForeignKey(Curso, on_delete=models.CASCADE)
-
-    carga_horaria = models.IntegerField()
-    periodo = models.IntegerField()
+class AvaliacaoTipo(models.Model): # RF15 
+    nome = models.CharField(max_length=100, verbose_name="Tipo de Avaliação")
 
     def __str__(self):
-        return f"{self.curso} - {self.disciplina}"
+        return self.nome
+
+class Avaliacao(models.Model): # RF09 
+    descricao = models.TextField(verbose_name="Descrição")
+    curso = models.ForeignKey(Curso, on_delete=models.CASCADE, verbose_name="Curso")
+    disciplina = models.ForeignKey(Disciplina, on_delete=models.CASCADE, verbose_name="Disciplina")
+    tipo = models.ForeignKey(AvaliacaoTipo, on_delete=models.CASCADE, verbose_name="Tipo")
+
+class Frequencia(models.Model): # RF10 
+    curso = models.ForeignKey(Curso, on_delete=models.CASCADE, verbose_name="Curso")
+    disciplina = models.ForeignKey(Disciplina, on_delete=models.CASCADE, verbose_name="Disciplina")
+    pessoa = models.ForeignKey(Pessoa, on_delete=models.CASCADE, verbose_name="Pessoa")
+    numero_faltas = models.IntegerField(verbose_name="Número de Faltas")
+
+class Ocorrencia(models.Model): # RF13 
+    descricao = models.TextField(verbose_name="Descrição")
+    data = models.DateField(verbose_name="Data")
+    curso = models.ForeignKey(Curso, on_delete=models.CASCADE, verbose_name="Curso")
+    disciplina = models.ForeignKey(Disciplina, on_delete=models.CASCADE, verbose_name="Disciplina")
+    pessoa = models.ForeignKey(Pessoa, on_delete=models.CASCADE, verbose_name="Pessoa")
