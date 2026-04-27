@@ -23,6 +23,7 @@ INSTALLED_APPS = [
     'app',
 ]
 
+# o template usado
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware', # Corrigido: SessionMiddleware
@@ -56,10 +57,11 @@ TEMPLATES = [
 WSGI_APPLICATION = 'config.wsgi.application'
 
 # Banco de Dados (PostgreSQL)
+
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'academicoinfo2026',
+        'default': {
+        'ENGINE': 'django.db.backends.postgresql',  # vírgula adicionada
+        'NAME': 'academicoinfoi2026',
         'USER': 'postgres',
         'PASSWORD': '123456',
         'HOST': 'localhost',
@@ -92,6 +94,9 @@ USE_TZ = True
 # Arquivos Estáticos (CSS, JavaScript, Imagens)
 STATIC_URL = 'static/'
 STATIC_ROOT = os.path.join(BASE_DIR, "staticfiles") 
+
+# corrigido (caminho válido)
+STATIC_ROOT = os.path.join(BASE_DIR, "staticfiles")
 
 STATICFILES_DIRS = [
     os.path.join(BASE_DIR, "app/static"),
